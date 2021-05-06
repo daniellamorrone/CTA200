@@ -1,0 +1,28 @@
+  171  cd Desktop/CTA200
+  172  mkdir HW1
+  173  cd HW1
+  174  git init
+  175  git remote add origin git@github.com:daniellamorrone/CTA200.git
+  176  gedit
+  177  git add README.md
+  178  git add LICENSE.txt
+  179  git commit -m "Add README.md and LICENSE.txt"
+  180  mkdir assignment_1
+  181  cp /home/morrone/Desktop/CTA200/CTA200H/assignment1_2020/main.c /home/morrone/Desktop/CTA200/HW1/assignment_1
+  182  cp /home/morrone/Desktop/CTA200/CTA200H/assignment1_2020/average.c /home/morrone/Desktop/CTA200/HW1/assignment_1
+  183  cp /home/morrone/Desktop/CTA200/CTA200H/assignment1_2020/average.h /home/morrone/Desktop/CTA200/HW1/assignment_1
+  184  gedit
+  185  pwd
+  186  cd assignment_1
+  187  make
+  188  ./mkfile
+  189  git add Makefile
+  190  git add main.c
+  191  git add average.c
+  192  git add average.h
+  193  git commit -m "Add Makefile and main.c, average.c, average.h"
+  194  git push origin master
+  195  pwd
+  196  cd ..
+  197  pwd
+  198  history > history.txt
