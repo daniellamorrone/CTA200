@@ -1,0 +1,235 @@
+\documentclass[10pt, preprint]{aastex}
+
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage[toc,page]{appendix}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    citecolor=blue,}
+\usepackage{booktabs}
+\renewcommand{\arraystretch}{1}
+
+\title{\Large CTA200H 2021 - Computing Project}
+
+\author{Daniella Morrone - daniella.morrone@mail.utoronto.ca
+\linebreak
+Supervisors: Lamiya Mowla and Kartheik Iyer}
+
+\begin{document}
+
+\section*{\large\textbf{QUESTION 1 - Visualizing the Galaxy}}\label{sec:1}
+
+In order to import and use the data contained in the \texttt{.fits} files, the Python module \texttt{astropy.io.fits} was used. The different components of the galaxy in the \texttt{galaxy\_hydro.fits} - stellar, gas and dust mass and star formation rate - were imported and their images were plotted using \texttt{matplotlib.pyplot.imshow}, as seen in Figure \ref{fig:components}. In order to more clearly view the structures of the galaxy, the logarithm of the data was calculated. Taking this logged data, the contour of the dust mass was plotted over the image of the stellar mass, and that of the gas mass plotted the image of the star formation rate; the contours were plotted using \texttt{matplotlib.pyplot.contour}. These plots can be found in Figure \ref{fig:contours}. The total sums of all the pixels in the image of each of these components was calculated and compared against what was expected in the \texttt{header} of the file; a summary of these calculations is in Table \ref{Table:totals}.
+
+\vspace{-1.5\baselineskip}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{all_mass_images.pdf}  
+    \vspace{-2\baselineskip}
+    \caption{Cropped images of galaxy components: Stellar mass; Star formation rate; Gas mass; Dust mass.}   
+    \label{fig:components}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lll}
+        \hline
+         Galaxy Component & Value & Log Value \\\hline
+         Stellar Mass & 1.986x$10^{10}$ M$_\odot$ & 10.298 log(M$_\odot$)\\
+         Gas Mass & 6.547x$10^{10}$ M$_\odot$ & 10.816 log(M$_\odot$)\\
+         Dust Mass & 5.844x$10^{7}$ M$_\odot$ & 7.767 log(M$_\odot$)\\
+         Star Formation Rate & $24.401$ $\frac{M_\odot}{yr}$ &  -- \\\hline
+    \end{tabular}
+    \caption{The total mass of each component of the galaxy and the total star formation rate.}
+    \label{Table:totals}
+\end{table}
+
+Next, the \texttt{galaxy\_allwav.fits} file was imported; this file contained data of this galaxy as observed at 20 varying wavelengths. Of these wavelengths, 5 of were selected and their images were plotted in Figure \ref{fig:wavelenghtimgs}. These 5 wavelengths were specifically chosen to be in the ultraviolet (0.16 µm), blue (0.435 µm), red (0.606 µm), infrared (1.6 µm), and far infrared (1300 µm) ranges. 
+
+\begin{figure}[H]
+    \centering
+    \subfloat[\centering Left - The dust mass contour (black line) plotted over the \\ cropped image of the stellar mass. Right - The gas mass contour \\ (grey line) plotted over the cropped image of star formation rate.]{\includegraphics[width=0.6\textwidth]{contour_image_compare_cropped.pdf}}
+    \subfloat[\centering The sum of all mass components.]{{\includegraphics[width=0.28\textwidth]{all_components_mass.pdf}}}
+    \caption{Different components of the galaxy over-plotted to view the structures.}
+    \label{fig:contours}
+\end{figure}
+
+\vspace{-2\baselineskip}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{all_IWAV_images.pdf}
+    \vspace{-3\baselineskip}
+    \caption{Cropped images of the galaxy at the selected wavelengths: Ultraviolet (0.16 µm); Blue (0.435 µm);, Red (0.606 µm); Infrared (1.6 µm); Far Infrared (1300 µm).}
+    \label{fig:wavelenghtimgs}
+\end{figure}
+
+For all the 20 files, the pixel values were summed and recorded as the total flux of the galaxy at that wavelength in arbitrary units \footnote{Note that the units on the flux were likely in nano-Janksy (nJy) but converting this to SI units was inconsistent with the expected units of flux. Thus, the units on the flux were deemed arbitrary and further analysis on this value and the nJy units would be the next steps to understanding and applying these fluxes.}. The total flux for the 5 selected wavelengths can be found in Table \ref{tab:totflux} and all of the total flux values were plotted as a function of wavelength in Figure \ref{fig:Flux}.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lllll}
+        \hline
+         Wavelength             & Total Flux [a.u.]     \\\hline
+         UV: 0.16 µm            & 4610.024              \\
+         Blue: 0.425 µm & 8654.571              \\
+         Red: 0.606 µm          & 10876.035             \\
+         IR: 1.6 µm             & 12957.026             \\
+         Far IR: 1300 µm        & 3896.321              \\\hline
+    \end{tabular}
+    \caption{The total flux of the galaxy as observed at varying wavelengths.}
+    \label{tab:totflux}
+\end{table}
+\vspace{-1\baselineskip}
+Figure \ref{fig:Flux} demonstrates the relationship between flux and the wavelength at which the light is emitted. At lower wavelengths, below 10 µm, a slight peak was noticed at approximately 1 µm which corresponds roughly to the beginning of the infrared wavelength range, which can be seen in the left plot in Figure \ref{fig:Flux}. After this, there was a very large peak in the mid to far infrared wavelength range, peaking roughly at 100 µm. Note that the galaxy is at redshift $z=2$, indicating that the light emitted from it was stretched to larger wavelengths by a factor of 3, as from found from the Doppler shift for wavelengths, equation \ref{eq:dop}:
+\begin{equation}\label{eq:dop}
+    \frac{\lambda_{f}}{\lambda_{i}} = 1+z.
+\end{equation}
+\noindent{Thus, the peak at roughly 100 µm was in the lower to mid infrared range when it was emitted, and the slight peak in the near infrared range was initially emitted as ultraviolet light. Different components of galaxy emit light at different wavelengths and can account for these peaks. Younger stars emit light at shorter wavelengths since they are hotter and dust obscures light at short wavelengths only to re-emit it in infrared. This is very consistent with what was found in Figure \ref{fig:Flux} since there was a peak in the infrared. The smaller peak emitted in the ultraviolet could have been due to younger stars or star formation whose light was not obscured by the dust.}
+\vspace{-1\baselineskip}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.86\textwidth]{flux_v_wave.pdf}
+    \caption{Flux, in arbitrary units, plotted as a function of observed wavelength of the galaxy in µm. The plot on the right is the same as the one on the left with a limited y-axis in order to see how flux behaves at lower wavelengths.}
+    \label{fig:Flux}
+\end{figure}
+
+
+\section*{\large\textbf{QUESTION 2 - Galaxy Size}}\label{sec:2}
+
+To calculate the half-mass size of the galaxy, the module \texttt{photutils.aperture.aperture\_photometry} was used to find the radius of a circular aperture which contains half the mass of the galaxy. The stellar, gas and dust masses from the \texttt{galaxy\_hydro.fits} file were summed to form a total mass data array and the sum of all pixel values was calculated to find the total mass. Next, \texttt{photutils.aperture.aperture\_photometry} was iterated at incrementally increasing radii until the mass contained within the radius was half the total mass. The radius at which this occurred was the half-mass size of the galaxy in pixels and was found to be r$_{\textrm{half-mass}} = 27.214$ pixels. To convert this value to a physical size, the following steps were done: the \texttt{PIXELSCALE} and \texttt{Z} were read in from the \texttt{header} of the \texttt{galaxy\_allwav.fits} file as the conversion from pixels to arcseconds and redshift, respectively, 
+$$\textrm{pix\_scale} = 0.03 \times \tfrac{384}{194} \approx 0.0594 \textrm{ }\tfrac{\textrm{arcsec}}{\textrm{pixel}}\textrm{,}\footnote{Note that $\textrm{pix\_scale} = 0.03$ was the scale for the images from the \texttt{galaxy\_allwav.fits} file. In order to use this to convert pixels to arcseconds in the \texttt{galaxy\_hydro.fits} file, it was multiplied by the ratio of the pixels between the two files. This ratio was calculated to be $\tfrac{384}{194} \approx 1.9794$.}\textrm{ } z = 2$$
+\noindent{Multiplying the pix\_scale by the size in pixels converts the size to an angular value in arcseconds. Next, the cosmological parameters of the universe were assumed to be:}
+\begin{equation}\label{c:params}
+    \Omega_{\textrm{M}0} = 0.2865\textrm{,   } \Omega_{\Lambda 0} = 0.7135\textrm{,   } H_0 = 69.32 \textrm{ } \tfrac{\textrm{km}}{\textrm{Mpc s}}, 
+\end{equation}
+\noindent{Using all the aforementioned constants, the following equations were employed to convert size in pixels to size a physical size:}
+\begin{equation}\label{eq:scalefactor}
+    R = (1+z)^{-1}\textrm{,   } \dot{R} = H_0 \sqrt{\frac{\Omega_{\textrm{M}0}}{R} + \Omega_{\Lambda 0}R^2}
+\end{equation}
+\begin{equation}\label{eq:comove}
+    D_A(R)=RD_c(R) \textrm{, where }  D_c(R) = c\int_{R}^{1} \frac{1}{R\dot{R}} \,dR
+\end{equation}
+\begin{equation}\label{eq:angsize}
+    \ell = D_A(R) \times \theta \textrm{, where } \theta = \textrm{pix\_scale } [\tfrac{\textrm{arcsec}}{\textrm{pix}}] \times \textrm{r}_{\textrm{half-mass}} \textrm{ [pix]}
+\end{equation}
+\noindent{After applying these calculations on the half-mass size of the galaxy in pixels, the half mass size in kilo-parsecs (kpc) was r$_{\textrm{half-mass}} = 27.214$ pixels $= 6.983$ kpc, as seen in Table \ref{tab:wavelengths}.}
+
+Next, a very similar process was followed for the half-light size of the galaxy as observed at an optical wavelength of $\lambda = 0.425$ µm. The pixel values were all summed and the radius which contained half the total flux was found by iterating \texttt{photutils.aperture.aperture\_photometry}. This radius, found to be r$_{\textrm{half-light}} = 30.880$ pixels, was then converted to kpc using the cosmological parameters in \ref{c:params} and equations \ref{eq:scalefactor}, \ref{eq:comove}, \ref{eq:angsize}. The pixel scale and the redshift used for this data set were:
+$$\textrm{pix\_scale} = 0.03 \textrm{ }\tfrac{\textrm{arcsec}}{\textrm{pixel}}\textrm{, } z = 2.$$
+\noindent{The resulting half-light size of the galaxy was r$_{\textrm{half-light}} = 30.880$ pixels $= 7.924$ kpc. The ratio of the half-mass size to half-light size was calculated to be $\tfrac{r_{\textrm{half-mass}}}{r_{\textrm{half-light}}} = 0.8813$, which was consistent with what was expected of the ratio of a galaxy with this mass and this redshift.\footnote{\label{fn:Suess2019}https://arxiv.org/pdf/1904.10992.pdf : \textit{Half-mass Radii for ∼7000 Galaxies at} $1.0 \leq z \leq 2.5$ \textit{: Most of the Evolution in the Mass–Size Relation Is Due to Color Gradients}. Suess, Katherine A.; Kriek, Mariska; Price, Sedona H.; Barro, Guillermo. (2019).} This indicates that at the optical wavelength chosen, the half-light size is slightly larger than the half-mass size of the galaxy; the two circular apertures were plotted over the image of the galaxy at the optical wavelength in Figure \ref{fig:opticalhalf}. Despite the consistency in the ratio of half-mass to half-light sizes, the actual values of the two appear larger than what was expected - which was approximately 2 kpc or less.\footnote{See footnote \ref{fn:Suess2019}.} Ultimately, this variation between expected and calculated values was likely caused when locating the region at which to perform the aperture photometry iteration. When automating this task, this location was noticed to be on the arm of the galaxy rather than in proximity to the galactic centre on several data sets. Thus, the location was manually selected and was possibly the cause of the discrepancy in the values.\footnote{Multiple methods were employed for this calculation and yielded many varying results. The method that was selected - manually choosing the location at which aperture photometry was performed - yielded the most consistent results between all the wavelengths.}}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lllll}
+        \hline
+         Wavelength             & Total Flux [a.u.]     & r$_{\textrm{half-light}}$ [pix]   &  r$_{\textrm{half-light}}$ [kpc]  & $\frac{r_{\textrm{half-mass}}}{r_{\textrm{half-light}}}$  \\\hline
+         UV: 0.16 µm            & 4610.024              & 37.055                            & 9.508                             & 0.7344        \\
+         Optical/Blue: 0.425 µm & 8654.571              & 30.880                            & 7.924                             & 0.8813        \\
+         Red: 0.606 µm          & 10876.035             & 29.286                            & 7.515                             & 0.9292        \\
+         IR: 1.6 µm             & 12957.026             & 27.095                            & 6.952                             & 1.0044        \\
+         Far IR: 1300 µm        & 3896.321              & 32.274                            & 8.281                             & 0.8432        \\\hline
+         --                     & Total Mass [M$_\odot$]& r$_{\textrm{half-mass}}$ [pix]    & r$_{\textrm{half-mass}}$ [kpc]    & --            \\\hline
+         --                     & 8.538x$10^{10}$       & 27.214                            & 6.983                             & --            \\\hline
+    \end{tabular}
+    \caption{The half-light size of the galaxy as observed at varying wavelengths.}
+    \label{tab:wavelengths}
+\end{table}
+
+\vspace{-0.5\baselineskip}
+
+This process was then repeated for the data at all 20 wavelengths and a summary of these values for the 5 previously selected wavelength data sets is in Table \ref{tab:wavelengths}. The ratios of $\tfrac{r_{\textrm{half-mass}}}{r_{\textrm{half-light}}}$ were again consistent with the expected values at this mass and redshift. The half-light size was plotted against wavelength, Figure \ref{fig:sizewave}. 
+
+\vspace{-1.4\baselineskip}
+
+\begin{figure}[H]
+    \centering
+    \subfloat[\centering Circular apertures for the half-mass and \\ half-light sizes of the galaxy plotted over the \\ image of the galaxy at the optical wavelength.]{{\label{fig:opticalhalf}\includegraphics[width=0.4\textwidth]{circles.pdf}}}
+    \subfloat[\centering Half-light size plotted as a function of wavelength \\ with the half-mass size over-plotted.]{{\label{fig:sizewave}\includegraphics[width=0.5\textwidth]{half_v_wave.pdf}}}
+    \caption{Half-Light and Half-Mass sizes of the galaxy.}
+\end{figure}
+
+\vspace{-1.2\baselineskip}
+
+However, this method for measuring the size of the galaxy does not work for images of real galaxies on the sky, only simulations. The \texttt{galaxy\_onsky\_F160W.fits} file was imported and analyzed for this. The sum of all the pixels is where the problem arises, simply due to the real image having noise in the background rather than pixels of value 0 everywhere except the galaxy itself. Though not an efficient method, the noise can be manually filtered out such that only the galaxy remains as pixels with value. This was done for the \texttt{galaxy\_onsky\_F160W.fits} file and the flux density of the pixels before and after filtering was plotted, Figure \ref{fig:filtered}. Using this filtering and the aforementioned method using aperture photometry, the half-light size of the galaxy was found to be r$_{\textrm{half-light}} = 7.362$ kpc. This is consistent with the previous results for the simulations, however the method to obtain this required extensive manual computation and a more efficient method would be better suited to measure the size of this galaxy.
+\vspace{-0.5\baselineskip}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{onsky_filt.pdf}
+    \caption{\centering Pixel flux density of the \texttt{galaxy\_onsky\_F160W.fits} galaxy \\ image before (left) and after filtering the noise (right).}
+    \label{fig:filtered}
+\end{figure}
+\vspace{-2\baselineskip}
+
+\section*{\large\textbf{QUESTION 3 - Using \texttt{statmorph}}}\label{sec:3}
+
+The Python module \texttt{statmorph} was installed and imported. The tutorial\footnote{https://statmorph.readthedocs.io/en/latest/notebooks/tutorial.html : Rodriguez-Gomez, V.; et al. (2019)} was run and the morphological parameters of the example galaxy \texttt{galaxy\_onsky\_F160W.fits} were measured, Table \ref{tab:morphparam}. The gain and the number of standard deviations per pixel above the background value for which to consider a pixel as possibly being part of a signal were both changed from the tutorial values to accommodate for this example galaxy:
+$ \textrm{gain} = 100.0\textrm{ and } \textrm{n}_{\sigma} = 1.1\textrm{, respectively.}$ The final plot output from the tutorial for the example galaxy can be found in Figure \ref{fig:stat}.
+\vspace{-0.5\baselineskip}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{statmorph.pdf}
+    \caption{\texttt{statmorph} summary image.}
+    \label{fig:stat}
+\end{figure}
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ll}
+        Parameter & Value \\\hline
+        Time & 0.454042 s\\
+        xc\_centroid & 96.07801134603386\\
+        yc\_centroid & 106.68958740021499\\
+        ellipticity\_centroid & 0.5519703098752687\\
+        elongation\_centroid & 2.231994937035535\\
+        orientation\_centroid & -1.3639754348274544\\
+        xc\_asymmetry & 96.223338879882\\
+        yc\_asymmetry & 105.69277091100385\\
+        ellipticity\_asymmetry & 0.5527798962058413\\
+        elongation\_asymmetry & 2.236035436502355\\
+        orientation\_asymmetry & -1.364261316762682\\
+        rpetro\_circ & 24.135623219047734\\
+        rpetro\_ellip & 44.21015440825346\\
+        rhalf\_circ & 12.292743156853122\\
+        rhalf\_ellip & 17.803864742346722\\
+        r20 & 5.358802246026299\\
+        r80 & 20.269707202270837\\
+        Gini & 0.5906853165188031\\
+        M20 & -1.8449260814572326\\
+        F(G, M20) & 0.24242609121793723\\
+        S(G, M20) & 0.0013337380310596836\\
+        sn\_per\_pixel & 0.0004933233\\
+        C & 2.888898722956452\\
+        A & 0.2884936132231093\\
+        S & 0.029582708725406928\\
+        sersic\_amplitude & 4.965930669634471e-09\\
+        sersic\_rhalf & 17.803864742346722\\
+        sersic\_n & 1.2958749929724942\\
+        sersic\_xc & 96.223338879882\\
+        sersic\_yc & 105.69277091100385\\
+        sersic\_ellip & 0.5527798962058413\\
+        sersic\_theta & 1.777331336827111\\
+        sky\_mean & -1.1690968e-10\\
+        sky\_median & -2.001517e-10\\
+        sky\_sigma & 5.2327714e-10\\
+        flag & 1\\
+        flag\_sersic & 1 \\\hline
+    \end{tabular}
+    \caption{\centering Morphological parameters from \texttt{statmorph}, taken directly \\ from the printed output parameters as done in the tutorial.}
+    \label{tab:morphparam}
+\end{table}
+
+\end{document}
